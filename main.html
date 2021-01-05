@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exchange rates lookup</title>
+    <style>
+        html, body { height: 100%;}
+        body, #body { display: flex; flex-flow: column nowrap; margin:0;}
+        body>* { padding: 10px;}
+        header, footer { width: 100%;}
+        header { background-color: darkorange;}
+        footer { background-color: darkturquoise; text-align: right;}
+        #body { flex-grow: 1; justify-content: flex-start; text-align: center;}
+        #input { font-size: x-large; font-weight: bold;}
+        #data { display: flex; flex-flow: row wrap; justify-content: space-around;}
+        div.rate-card  {
+            display: flex; flex-flow: column nowrap; justify-content: space-around;
+            border-radius: 5px; border-width: thin; border-style: solid; border-color: transparent;
+            margin: 10px; padding: 0px 5px; height: 8vh; background: lightgrey;
+            background: linear-gradient(180deg, lightgrey 50%, whitesmoke 50%);
+        }
+        #input div.rate-card { display: inline-flex; vertical-align: middle; font-size: initial;}
+        .rate-card span { display: block;}
+        .rate-card span:first-child {}
+        .rate-card span:last-child { font-weight: bold;}
+    </style>
+    <script src="prefixfree.min.js"></script>
+</head>
+<body>
+<header>
+    <h1>Latest exchange rates lookup</h1>
+</header>
+
+<script>
+//initialization
+    //GET default data (latest, base EUR)
+    fetch("https://api.exchangeratesapi.io/latest")
+        .then(response => response.json())
+        .then(result => {
+            //update latest date: show current date
+            document.getElementById("date").innerText = result.date;
+
+            //input all rates
+            for (var currency in result.rates){
+                document.getElementById("data").insertAdjacentHTML("beforeend","<div id='"
+                    +currency+"' class='rate-card'><span>"+currency+"</span><span>"
+                    +result.rates[currency]+"</span></div>");
+            }
+        });
+</script>
+<div id="body">
+    <div id="input">
+        Base:<div id="EUR" class="rate-card"><span>EUR</span><span>1</span></div>- Date:<span id="date"></span>
+    </div>
+    <div id="data"></div>
+</div>
+<footer><p>Made by <a href="https://github.com/laurelgr">Lauriane Gros</a> using the <a href="https://exchangeratesapi.io">Foreign exchange rates API</a>.</p></footer>
+</body>
+</html>
