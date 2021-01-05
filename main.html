@@ -4,25 +4,33 @@
     <meta charset="UTF-8">
     <title>Exchange rates lookup</title>
     <style>
+        /* global display */
         html, body { height: 100%;}
-        body, #body { display: flex; flex-flow: column nowrap; margin:0;}
+        body { display: flex; flex-flow: column nowrap; margin:0;}
         body>* { padding: 10px;}
         header, footer { width: 100%;}
         header { background-color: darkorange;}
         footer { background-color: darkturquoise; text-align: right;}
-        #body { flex-grow: 1; justify-content: flex-start; text-align: center;}
-        #input { font-size: x-large; font-weight: bold;}
-        #data { display: flex; flex-flow: row wrap; justify-content: space-around;}
-        div.rate-card  {
+        #body { flex-grow: 1; text-align: center;
+            display: flex; flex-flow: row wrap; justify-content: center; }
+
+        /* content flex formatting */
+        div.api_input { align-self: center; font-size: x-large; font-weight: bold;}
+        #input_base { order: -3;}
+        div.current_base { order: -2!important;} /*override initial position*/
+        #input_date { order: -1; margin-left: 10px;}
+        #flex_linebreak { order: 0; width: 100%; height: 0; margin-top: 10px;}
+
+        /* exchange rate cards */
+        div.rate_card  {
             display: flex; flex-flow: column nowrap; justify-content: space-around;
             border-radius: 5px; border-width: thin; border-style: solid; border-color: transparent;
             margin: 10px; padding: 0px 5px; height: 8vh; background: lightgrey;
             background: linear-gradient(180deg, lightgrey 50%, whitesmoke 50%);
         }
-        #input div.rate-card { display: inline-flex; vertical-align: middle; font-size: initial;}
-        .rate-card span { display: block;}
-        .rate-card span:first-child {}
-        .rate-card span:last-child { font-weight: bold;}
+        .rate_card span { display: block;}
+        .rate_card span:first-child {}
+        .rate_card span:last-child { font-weight: bold;}
     </style>
     <script src="prefixfree.min.js"></script>
 </head>
@@ -37,22 +45,25 @@
     fetch("https://api.exchangeratesapi.io/latest")
         .then(response => response.json())
         .then(result => {
-            //update latest date: show current date
-            document.getElementById("date").innerText = result.date;
+            //update latest date: show current date, limit max date
+            document.getElementById("date").setAttribute("max",result.date);
+            document.getElementById("date").setAttribute("value",result.date);
 
-            //input all rates
+
+
+            //input all rates (first run: populate the #data)
             for (var currency in result.rates){
-                document.getElementById("data").insertAdjacentHTML("beforeend","<div id='"
-                    +currency+"' class='rate-card'><span>"+currency+"</span><span>"
+                document.getElementById("flex_linebreak").insertAdjacentHTML("afterend","<div id='"
+                    +currency+"' class='rate_card'><span>"+currency+"</span><span>"
                     +result.rates[currency]+"</span></div>");
             }
         });
 </script>
 <div id="body">
-    <div id="input">
-        Base:<div id="EUR" class="rate-card"><span>EUR</span><span>1</span></div>- Date:<span id="date"></span>
-    </div>
-    <div id="data"></div>
+    <div id="input_base" class="api_input"><label for="base">Base:</label><input hidden id="base" name="base" type="text" value="EUR"/></div>
+    <div id="EUR" class="rate_card current_base"><span>EUR</span><span>1</span></div>
+    <div id="input_date" class="api_input"><label for="date">Date:</label><input id="date" type="date" name="api_date" min='1999-01-01'/></div>
+    <div id="flex_linebreak"></div>
 </div>
 <footer><p>Made by <a href="https://github.com/laurelgr">Lauriane Gros</a> using the <a href="https://exchangeratesapi.io">Foreign exchange rates API</a>.</p></footer>
 </body>
