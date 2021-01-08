@@ -11,8 +11,8 @@
         header, footer { width: 100%;}
         header { background-color: darkorange;}
         footer { background-color: darkturquoise; text-align: right;}
-        #body { flex-grow: 1; text-align: center;
-            display: flex; flex-flow: row wrap; justify-content: center; }
+        #body { flex-grow: 1; text-align: center; justify-content: center;
+            display: flex; flex-flow: row wrap; align-items: center; align-content: flex-start;}
 
         /* content flex formatting */
         div.api_input { align-self: center; font-size: x-large; font-weight: bold;}
@@ -112,7 +112,7 @@ function day_rates(result){
 <!-- page's content -->
 <div id="body">
     <div id="input_base" class="api_input"><label for="base">Base:</label><input hidden id="base" name="base" type="text" value="EUR"/></div>
-    <div id="input_date" class="api_input"><label for="date">Date:</label><input id="date" type="date" name="api_date" min='1999-01-01'/></div>
+    <div id="input_date" class="api_input"><label for="date">Date:</label><input id="date" type="date" name="api_date" min='1999-01-01' readonly/></div>
     <div id="flex_linebreak"></div>
 </div>
 
