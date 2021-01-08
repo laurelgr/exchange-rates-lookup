@@ -33,38 +33,90 @@
         .rate_card span:last-child { font-weight: bold;}
     </style>
     <script src="prefixfree.min.js"></script>
+
+    <!-- Javascript declarations -->
+    <script title="State variables">
+    init_done = false;
+</script>
+    <script title="Display functions">
+// returns html text of a rate's display
+function rateHTML(currency, rate) {
+    return "<div id='"+currency+"' class='rate_card'><span>"+currency+"</span><span>"+rate+"</span></div>"
+}
+
+//insert rateHTML after an element of given ID
+function insertAfterID(id, currency, rate) {
+    document.getElementById(id).insertAdjacentHTML("afterend", rateHTML(currency, rate));
+}
+
+//update given currency's rate
+function rateUpdate(currency, rate) {
+    document.getElementById(currency).lastChild.innerText = rate;
+}
+
+//update (or initialize) display for one day's rates
+//result is object of expected content { base: text; date: text; rates: [ (currency: number)* ];}
+//only "base" and "rates" are accessed in this function
+function day_rates(result){
+    if(init_done) {
+        //update base rate (security)
+        rateUpdate(result.base, 1);
+
+        //update all rates
+        for (var currency in result.rates){ rateUpdate(currency, result.rates[currency]); }
+    }
+    else {
+        //input base rate display
+        insertAfterID("input_base", result.base, 1);
+        document.getElementById(result.base).classList.add("current_base");
+
+        //input all rates
+        for (var currency in result.rates){ insertAfterID("flex_linebreak", currency, result.rates[currency]); }
+
+        //update state variable
+        init_done = true;
+    }
+}
+
+</script>
+    <script title="API call functions">
+    //GET latest with default options (base EUR, latest date available)
+    function api_latest(){
+        fetch("https://api.exchangeratesapi.io/latest")
+            .then(response => response.json())
+            .then(result => {
+                //update latest date: show current date, limit max date
+                document.getElementById("date").setAttribute("max",result.date);
+                document.getElementById("date").setAttribute("value",result.date);
+
+                //update all rates
+                day_rates(result);
+            })
+    }
+
+</script>
 </head>
 <body>
+<!-- Header -->
 <header>
     <h1>Latest exchange rates lookup</h1>
 </header>
 
-<script>
-//initialization
-    //GET default data (latest, base EUR)
-    fetch("https://api.exchangeratesapi.io/latest")
-        .then(response => response.json())
-        .then(result => {
-            //update latest date: show current date, limit max date
-            document.getElementById("date").setAttribute("max",result.date);
-            document.getElementById("date").setAttribute("value",result.date);
-
-
-
-            //input all rates (first run: populate the #data)
-            for (var currency in result.rates){
-                document.getElementById("flex_linebreak").insertAdjacentHTML("afterend","<div id='"
-                    +currency+"' class='rate_card'><span>"+currency+"</span><span>"
-                    +result.rates[currency]+"</span></div>");
-            }
-        });
+<noscript>This page requires JavaScript to work!</noscript>
+<!-- Javascript run at start -->
+<script title="Display Initialization">
+    //default data (latest day available, base EUR)
+    api_latest();
 </script>
+
+<!-- page's content -->
 <div id="body">
     <div id="input_base" class="api_input"><label for="base">Base:</label><input hidden id="base" name="base" type="text" value="EUR"/></div>
-    <div id="EUR" class="rate_card current_base"><span>EUR</span><span>1</span></div>
     <div id="input_date" class="api_input"><label for="date">Date:</label><input id="date" type="date" name="api_date" min='1999-01-01'/></div>
     <div id="flex_linebreak"></div>
 </div>
+
+<!-- Footer -->
 <footer><p>Made by <a href="https://github.com/laurelgr">Lauriane Gros</a> using the <a href="https://exchangeratesapi.io">Foreign exchange rates API</a>.</p></footer>
 </body>
 </html>
