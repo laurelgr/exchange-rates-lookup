@@ -16,13 +16,12 @@
         /* content flex formatting */
         div.api_input { align-self: center; font-size: x-large; font-weight: bold;}
         #input_base { order: -3;}
-        div.current_base { order: -2!important;} /*override initial position*/
         #input_date { order: -1; margin-left: 10px;}
         #flex_linebreak { order: 0; width: 100%; height: 0; margin-top: 10px;}
 
         /* exchange rate cards */
         div.rate_card  {
-            display: flex; flex-flow: column nowrap; justify-content: space-around;
+            display: flex; flex-flow: column nowrap; justify-content: space-around; order:1;
             border-radius: 5px; border-width: thin; border-style: solid; border-color: transparent;
             margin: 10px; padding: 0px 5px; height: 8vh; background: lightgrey;
             background: linear-gradient(180deg, lightgrey 50%, whitesmoke 50%);
@@ -30,6 +29,7 @@
         .rate_card span { display: block;}
         .rate_card span:first-child {}
         .rate_card span:last-child { font-weight: bold;}
+        .rate_card.current_base { order: -2;}
     </style>
     <!-- Libraries -->
     <script title="PrefixFree 1.0.7 from Lea Verou on Github - MIT license">
@@ -86,45 +86,45 @@ function day_rates(result){
         //update all rates
         for (var currency in result.rates){ rateUpdate(currency, result.rates[currency]); }
     }
-    else {
-        //input base rate display
-        insertAfterID("input_base", result.base, 1);
-        document.getElementById(result.base).classList.add("current_base");
-        currentB_base = result.base;
-
-        //input all rates
-        for (var currency in result.rates){ insertAfterID("flex_linebreak", currency, result.rates[currency]); }
-
-        //update state variable
-        init_done = true;
-    }
 }
 
 </script>
     <script title="API call functions">
     //GET latest with default options (base EUR, latest date available)
     function APILatest(){
-        fetch("https://api.exchangeratesapi.io/latest")
-            .then(response => response.json())
-            .then(result => {
-                //update latest date: show current date, limit max date
-                document.getElementById("date").setAttribute("max",result.date);
-                document.getElementById("date").setAttribute("value",result.date);
-
-                //update all rates
-                day_rates(result);
-            });
+        return fetch("https://api.exchangeratesapi.io/latest")
+            .then(response => response.json());
     }
 
-    function APIDate(date, base){
-        fetch("https://api.exchangeratesapi.io/"+date+"?base="+base)
-            .then(response => response.json())
-            .then(result => { day_rates(result);});
+    function APIDate(date, base="EUR"){
+        return fetch("https://api.exchangeratesapi.io/"+date+"?base="+base)
+            .then(response => response.json());
     }
 </script>
     <script title="UI handler functions">
+        // call upon API to get given day's rates with given base currency, updates display
+        function newRequest(base, date) {
+            APIDate(date, base).then(result => day_rates(result));
+        }
+
+        // the date of rates to show has changed -> make request
         function dateChange(date) {
-            APIDate(date, current_base);
+            newRequest(current_base, date);
+        }
+
+        // the base currency has changed -> update html, make request
+        function baseChange(new_base) {
+            // exchange classes for display
+            document.getElementById(current_base).classList.toggle("current_base");
+            document.getElementById(new_base).classList.toggle("current_base");
+
+            // update state variable and hidden form
+            current_base = new_base;
+            document.getElementById("base").setAttribute("value", current_base);
+
+            // GET new rates
+            //TODO: recalculate client-side from known rates
+            newRequest(new_base, document.getElementById("date").value);
         }
     </script>
 </head>
@@ -136,16 +136,39 @@ function day_rates(result){
 
 <noscript>This page requires JavaScript to work!</noscript>
 <!-- Javascript run at start -->
-<script title="Display Initialization">
-    //default data (latest day available, base EUR)
-    APILatest();
+<script title="Initialization">
+    // populate with default data (latest day available, base EUR)
+    APILatest().then(result => {
+        // update latest date: show current date, limit max date
+        document.getElementById("date").setAttribute("max",result.date);
+        document.getElementById("date").setAttribute("value",result.date);
+
+        // input base rate display
+        insertAfterID("input_base", result.base, 1);
+        document.getElementById(result.base).classList.add("current_base");
+
+        // input all rates
+        for (var currency in result.rates){ insertAfterID("flex_linebreak", currency, result.rates[currency]); }
+
+        // update state variable
+        init_done = true;
+        current_base = result.base;
+
+        // bind click event to change base currency
+        document.querySelectorAll(".rate_card").forEach(function(card) {
+            card.onclick = function() {
+                // if click another currency than base, exchange with current base
+                if (card.id != current_base){ baseChange(card.id); }
+            };
+        });
+    });;
 </script>
 
 <!-- page's content -->
 <div id="body">
     <div id="input_base" class="api_input">
         <label for="base">Base:</label>
-        <input hidden id="base" name="base" type="text" value="EUR"/>
+        <input hidden id="base" name="base" type="text" value="EUR" />
     </div>
 
     <div id="input_date" class="api_input">
