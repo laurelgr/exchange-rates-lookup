@@ -5,7 +5,7 @@ Simple web application that display the latest exchange rates.
 ### Open the application
 #### Github Page
 Go to [https://laurelgr.github.io/exchange-rates-lookup](https://laurelgr.github.io/exchange-rates-lookup) and 
-click on __Basic version__.
+pick a version.
 
 #### On the go
 Open the `takeaway.html` file in a browser with javascript enabled.
@@ -19,6 +19,11 @@ Click another currency's name to change base currency! (A new request is fired t
 
 Click the date and pick another to see that day's rates! If no rates are available, the API provide the previous 
 available rates and the date is updated to reflect the true day referred.
+
+#### Normal version [alpha version]
+You can drag around the currencies to match your prefered order.  
+Drag them to the bottom part so they are removed from your displayed rates! 
+
 ## Credits
 Exchange rates: [Foreign exchange rates API](https://exchangeratesapi.io)
 
