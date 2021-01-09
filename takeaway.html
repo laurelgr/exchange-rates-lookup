@@ -30,7 +30,7 @@
         .rate_card:not(.current_base) span:first-child { cursor: pointer; }
         .rate_card:not(.current_base) span:first-child:hover { font-weight: bold; }
         .rate_card span:last-child { font-weight: bold;}
-        .rate_card.current_base { order: -2;}
+        .rate_card.current_base { order: -2; padding: 0px 25px;}
     </style>
     <!-- Libraries -->
     <script title="PrefixFree 1.0.7 from Lea Verou on Github - MIT license">
@@ -141,6 +141,25 @@ function day_rates(result){
 </header>
 
 <noscript>This page requires JavaScript to work!</noscript>
+
+<!-- page's content -->
+<div id="body">
+    <div id="input_base" class="api_input">
+        <label for="base">Base:</label>
+        <input hidden id="base" name="base" type="text" value="EUR" />
+    </div>
+
+    <div id="input_date" class="api_input">
+        <label for="date">Date:</label>
+        <input id="date" type="date" name="api_date" min='1999-01-01' onchange="dateChange(event.target.value)"/>
+    </div>
+
+    <div id="flex_linebreak"></div>
+</div>
+
+<!-- Footer -->
+<footer><p>Made by <a href="https://github.com/laurelgr/exchange-rates-lookup">Lauriane Gros</a> using the <a href="https://exchangeratesapi.io">Foreign exchange rates API</a>.</p></footer>
+
 <!-- Javascript run at start -->
 <script title="Initialization">
     // populate with default data (latest day available, base EUR)
@@ -161,23 +180,5 @@ function day_rates(result){
         current_base = result.base;
     });;
 </script>
-
-<!-- page's content -->
-<div id="body">
-    <div id="input_base" class="api_input">
-        <label for="base">Base:</label>
-        <input hidden id="base" name="base" type="text" value="EUR" />
-    </div>
-
-    <div id="input_date" class="api_input">
-        <label for="date">Date:</label>
-        <input id="date" type="date" name="api_date" min='1999-01-01' onchange="dateChange(event.target.value)"/>
-    </div>
-
-    <div id="flex_linebreak"></div>
-</div>
-
-<!-- Footer -->
-<footer><p>Made by <a href="https://github.com/laurelgr/exchange-rates-lookup">Lauriane Gros</a> using the <a href="https://exchangeratesapi.io">Foreign exchange rates API</a>.</p></footer>
 </body>
 </html>
