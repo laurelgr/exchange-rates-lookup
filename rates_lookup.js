@@ -67,17 +67,22 @@ function dateChange(date) {
 // if new base != current base, change currency and update rates
 function baseChange(new_base) {
     if (new_base != current_base) {
-        // exchange classes for display
-        document.getElementById(current_base).classList.toggle("current_base");
-        document.getElementById(new_base).classList.toggle("current_base");
+        currency_element = document.getElementById(new_base);
+        if (currency_element.parentNode.id == "timeout"){
+            return;
+        } else {
+            // exchange classes for display
+            document.getElementById(current_base).classList.toggle("current_base");
+            document.getElementById(new_base).classList.toggle("current_base");
 
-        // update state variable and hidden form
-        current_base = new_base;
-        document.getElementById("base").setAttribute("value", current_base);
+            // update state variable and hidden form
+            current_base = new_base;
+            document.getElementById("base").setAttribute("value", current_base);
 
-        // GET new rates
-        //TODO: recalculate client-side from known rates
-        newRequest(new_base, document.getElementById("date").value);
+            // GET new rates
+            //TODO: recalculate client-side from known rates
+            newRequest(new_base, document.getElementById("date").value);
+        }
     }
 }
 

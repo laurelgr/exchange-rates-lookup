@@ -5,7 +5,7 @@ body>* { padding: 10px;}
 header { background-color: darkorange;}
 footer { background-color: darkturquoise; text-align: right;}
 #body, #timeout { flex-grow: 1; text-align: center; justify-content: center;
-    display: flex; flex-flow: row wrap; align-items: center; align-content: flex-start;}
+    display: flex; flex-flow: row wrap; align-items: center; align-content: flex-around;}
 
 /* content flex formatting */
 div.api_input { align-self: center; font-size: x-large; font-weight: bold;}
@@ -32,6 +32,8 @@ div.rate_card  {
     width: 100%;
     background: whitesmoke;
     order: 9001;
+    border-style: dotted;
+    border-color: grey;
 }
 .timeout-line {
     color: grey;
