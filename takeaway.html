@@ -27,7 +27,8 @@
             background: linear-gradient(180deg, lightgrey 50%, whitesmoke 50%);
         }
         .rate_card span { display: block;}
-        .rate_card span:first-child {}
+        .rate_card:not(.current_base) span:first-child { cursor: pointer; }
+        .rate_card:not(.current_base) span:first-child:hover { font-weight: bold; }
         .rate_card span:last-child { font-weight: bold;}
         .rate_card.current_base { order: -2;}
     </style>
@@ -62,7 +63,8 @@ StyleFix.register(a.prefixCSS)}})(document.documentElement);
     <script title="Display functions">
 // returns html text of a rate's display
 function rateHTML(currency, rate) {
-    return "<div id='"+currency+"' class='rate_card'><span>"+currency+"</span><span>"+rate+"</span></div>"
+    return "<div id='"+currency+"' class='rate_card'><span onclick='baseChange(\""+currency
+    +"\")'>"+currency+"</span><span>"+rate+"</span></div>"
 }
 
 //insert rateHTML after an element of given ID
@@ -114,19 +116,21 @@ function day_rates(result){
             newRequest(current_base, date);
         }
 
-        // the base currency has changed -> update html, make request
+        // if new base != current base, change currency and update rates
         function baseChange(new_base) {
-            // exchange classes for display
-            document.getElementById(current_base).classList.toggle("current_base");
-            document.getElementById(new_base).classList.toggle("current_base");
+            if (new_base != current_base) {
+                // exchange classes for display
+                document.getElementById(current_base).classList.toggle("current_base");
+                document.getElementById(new_base).classList.toggle("current_base");
 
-            // update state variable and hidden form
-            current_base = new_base;
-            document.getElementById("base").setAttribute("value", current_base);
+                // update state variable and hidden form
+                current_base = new_base;
+                document.getElementById("base").setAttribute("value", current_base);
 
-            // GET new rates
-            //TODO: recalculate client-side from known rates
-            newRequest(new_base, document.getElementById("date").value);
+                // GET new rates
+                //TODO: recalculate client-side from known rates
+                newRequest(new_base, document.getElementById("date").value);
+            }
         }
     </script>
 </head>
@@ -155,14 +159,6 @@ function day_rates(result){
         // update state variable
         init_done = true;
         current_base = result.base;
-
-        // bind click event to change base currency
-        document.querySelectorAll(".rate_card").forEach(function(card) {
-            card.onclick = function() {
-                // if click another currency than base, exchange with current base
-                if (card.id != current_base){ baseChange(card.id); }
-            };
-        });
     });;
 </script>
 

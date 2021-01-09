@@ -15,7 +15,7 @@ Script and CSS are included to make it usable without downloading multiple files
 ### Getting started
 The application initialize with the latest available rates, on base currency EUR.  
 
-Click another currency to change base currency! (A new request is fired to update the rates.)
+Click another currency's name to change base currency! (A new request is fired to update the rates.)
 
 Click the date and pick another to see that day's rates! If no rates are available, the API provide the previous 
 available rates and the date is updated to reflect the true day referred.
