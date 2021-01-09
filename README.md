@@ -22,5 +22,8 @@ available rates and the date is updated to reflect the true day referred.
 ## Credits
 Exchange rates: [Foreign exchange rates API](https://exchangeratesapi.io)
 
-CSS browser-specific prefixes: [-prefix-free](https://projects.verou.me/prefixfree/) (1.0.7).  
-The PrefixFree code is also included in the separate file `prefixfree.min.js`
+CSS browser-specific prefixes: [-prefix-free](https://projects.verou.me/prefixfree/) (1.0.7).
+
+Great drag&drop: [Dragula](https://bevacqua.github.io/dragula/)
+
+The PrefixFree and Dragula code I used can be found in the **extensions** folder.

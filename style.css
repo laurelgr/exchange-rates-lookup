@@ -1,0 +1,27 @@
+/* global display */
+html, body { height: 100%;}
+body { display: flex; flex-flow: column nowrap; margin:0;}
+body>* { padding: 10px;}
+header { background-color: darkorange;}
+footer { background-color: darkturquoise; text-align: right;}
+#body { flex-grow: 1; text-align: center; justify-content: center;
+    display: flex; flex-flow: row wrap; align-items: center; align-content: flex-start;}
+
+/* content flex formatting */
+div.api_input { align-self: center; font-size: x-large; font-weight: bold;}
+#input_base { order: -3;}
+#input_date { order: -1; margin-left: 10px;}
+#flex_linebreak { order: 0; width: 100%; height: 0; margin-top: 10px;}
+
+/* exchange rate cards */
+div.rate_card  {
+    display: flex; flex-flow: column nowrap; justify-content: space-around; order:1;
+    border-radius: 5px; border-width: thin; border-style: solid; border-color: transparent;
+    margin: 10px; padding: 0px 5px; height: 8vh; background: lightgrey;
+    background: linear-gradient(180deg, lightgrey 50%, whitesmoke 50%);
+}
+.rate_card span { display: block;}
+.rate_card:not(.current_base) span:first-child { cursor: pointer; }
+.rate_card:not(.current_base) span:first-child:hover { font-weight: bold; }
+.rate_card span:last-child { font-weight: bold;}
+.rate_card.current_base { order: -2; padding: 0px 25px;}
