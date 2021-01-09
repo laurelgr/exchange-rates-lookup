@@ -57,6 +57,7 @@ StyleFix.register(a.prefixCSS)}})(document.documentElement);
     <!-- Javascript declarations -->
     <script title="State variables">
     init_done = false;
+    current_base = "";
 </script>
     <script title="Display functions">
 // returns html text of a rate's display
@@ -89,6 +90,7 @@ function day_rates(result){
         //input base rate display
         insertAfterID("input_base", result.base, 1);
         document.getElementById(result.base).classList.add("current_base");
+        currentB_base = result.base;
 
         //input all rates
         for (var currency in result.rates){ insertAfterID("flex_linebreak", currency, result.rates[currency]); }
@@ -101,7 +103,7 @@ function day_rates(result){
 </script>
     <script title="API call functions">
     //GET latest with default options (base EUR, latest date available)
-    function api_latest(){
+    function APILatest(){
         fetch("https://api.exchangeratesapi.io/latest")
             .then(response => response.json())
             .then(result => {
@@ -111,10 +113,20 @@ function day_rates(result){
 
                 //update all rates
                 day_rates(result);
-            })
+            });
     }
 
+    function APIDate(date, base){
+        fetch("https://api.exchangeratesapi.io/"+date+"?base="+base)
+            .then(response => response.json())
+            .then(result => { day_rates(result);});
+    }
 </script>
+    <script title="UI handler functions">
+        function dateChange(date) {
+            APIDate(date, current_base);
+        }
+    </script>
 </head>
 <body>
 <!-- Header -->
@@ -126,13 +138,21 @@ function day_rates(result){
 <!-- Javascript run at start -->
 <script title="Display Initialization">
     //default data (latest day available, base EUR)
-    api_latest();
+    APILatest();
 </script>
 
 <!-- page's content -->
 <div id="body">
-    <div id="input_base" class="api_input"><label for="base">Base:</label><input hidden id="base" name="base" type="text" value="EUR"/></div>
-    <div id="input_date" class="api_input"><label for="date">Date:</label><input id="date" type="date" name="api_date" min='1999-01-01' readonly/></div>
+    <div id="input_base" class="api_input">
+        <label for="base">Base:</label>
+        <input hidden id="base" name="base" type="text" value="EUR"/>
+    </div>
+
+    <div id="input_date" class="api_input">
+        <label for="date">Date:</label>
+        <input id="date" type="date" name="api_date" min='1999-01-01' onchange="dateChange(event.target.value)"/>
+    </div>
+
     <div id="flex_linebreak"></div>
 </div>
 
