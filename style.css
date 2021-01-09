@@ -25,3 +25,11 @@ div.rate_card  {
 .rate_card:not(.current_base) span:first-child:hover { font-weight: bold; }
 .rate_card span:last-child { font-weight: bold;}
 .rate_card.current_base { order: -2; padding: 0px 25px;}
+
+/* timeout zone */
+#timeout {
+    min-height: 20px;
+    width: 100%;
+    background: whitesmoke;
+    order: 9001;
+}

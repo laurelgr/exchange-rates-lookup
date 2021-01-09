@@ -104,3 +104,14 @@ function initApp() {
         current_base = result.base;
     });
 }
+
+function initDrag() {
+    dragula([document.getElementById("body"), document.getElementById("timeout")], {
+         invalid: function (element, handle){
+             if (element.classList.contains("immobile")||element.classList.contains("current_base"))
+                 return true;
+             else
+                 return false;
+             }
+         });
+}

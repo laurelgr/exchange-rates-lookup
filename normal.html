@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Exchange rates lookup</title>
     <link rel="stylesheet" href="style.css" type="text/css" />
+    <link rel="stylesheet" href="extensions/dragula.min.css" type="text/css" />
+
     <!-- Libraries -->
     <script title="PrefixFree 1.0.7 from Lea Verou on Github - MIT license" src="extensions/prefixfree.min.js"></script>
 
@@ -20,22 +22,25 @@
 
 <!-- page's content -->
 <div id="body">
-    <div id="input_base" class="api_input">
+    <div id="input_base" class="api_input immobile">
         <label for="base">Base:</label>
         <input hidden id="base" name="base" type="text" value="EUR" />
     </div>
 
-    <div id="input_date" class="api_input">
+    <div id="input_date" class="api_input immobile">
         <label for="date">Date:</label>
         <input id="date" type="date" name="api_date" min='1999-01-01' onchange="dateChange(event.target.value)"/>
     </div>
 
-    <div id="flex_linebreak"></div>
+    <div id="flex_linebreak immobile"></div>
+    <div id="timeout">Drag undesired currencies here!</div>
 </div>
 <!-- Footer -->
 <footer><p>Made by <a href="https://github.com/laurelgr/exchange-rates-lookup">Lauriane Gros</a> using the <a href="https://exchangeratesapi.io">Foreign exchange rates API</a>.</p></footer>
 
 <!-- Javascript run at start -->
 <script title="Initialization">initApp()</script>
+<script title="Dragula from Nicolas Bevacqua on Github - MIT license" src="extensions/dragula.min.js"></script>
+<script title="Dragula init">initDrag();</script>
 </body>
 </html>
