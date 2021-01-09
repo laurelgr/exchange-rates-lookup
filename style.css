@@ -4,7 +4,7 @@ body { display: flex; flex-flow: column nowrap; margin:0;}
 body>* { padding: 10px;}
 header { background-color: darkorange;}
 footer { background-color: darkturquoise; text-align: right;}
-#body { flex-grow: 1; text-align: center; justify-content: center;
+#body, #timeout { flex-grow: 1; text-align: center; justify-content: center;
     display: flex; flex-flow: row wrap; align-items: center; align-content: flex-start;}
 
 /* content flex formatting */
@@ -32,4 +32,17 @@ div.rate_card  {
     width: 100%;
     background: whitesmoke;
     order: 9001;
+}
+.timeout-line {
+    color: grey;
+    font-style: italic;
+    order:-1;
+    width: 100%;
+    text-align: center;
+}
+#timeout .rate_card  {
+    height: inherit; background: lightgrey;
+}
+#timeout .rate_card span:last-child {
+    display: none;
 }
